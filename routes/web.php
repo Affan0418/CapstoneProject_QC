@@ -1,20 +1,31 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\RegionDashboardController;
+use App\Http\Controllers\BranchDashboardController;
+use App\Http\Controllers\AgencyDashboardController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Http\Request;
 
-Route::get('/', function () {
-    return redirect()->route('login');
-});
+Route::get('/', fn () => redirect()->route('login'));
 
-// Halaman yang hanya bisa diakses saat BELUM login
 Route::middleware('guest')->group(function () {
     Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
-    Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:5,1')->name('login.post');
 });
 
-// Halaman yang hanya bisa diakses saat SUDAH login
-Route::middleware('auth')->group(function () {
-    Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
+Route::middleware(['auth', 'active'])->group(function () {
     Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+    Route::get('/dashboard', fn () => redirect()->route(auth()->user()->homeRoute()))->name('dashboard');
+
+    Route::middleware('role:region')->prefix('region')->name('region.')->group(function () {
+        Route::get('/dashboard', [RegionDashboardController::class, 'index'])->name('dashboard');
+    });
+    Route::middleware('role:admin_branch')->prefix('branch')->name('branch.')->group(function () {
+        Route::get('/dashboard', [BranchDashboardController::class, 'index'])->name('dashboard');
+    });
+    Route::middleware('role:agency')->prefix('agency')->name('agency.')->group(function () {
+        Route::get('/dashboard', [AgencyDashboardController::class, 'index'])->name('dashboard');
+    });
 });
