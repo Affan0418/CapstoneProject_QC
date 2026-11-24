@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\RegionDashboardController;
 use App\Http\Controllers\BranchDashboardController;
 use App\Http\Controllers\AgencyDashboardController;
+use App\Http\Controllers\BranchCustomerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Http\Request;
@@ -36,5 +37,9 @@ Route::middleware(['auth', 'active'])->group(function () {
         });
     Route::middleware('role:agency')->prefix('agency')->name('agency.')->group(function () {
         Route::get('/dashboard', [AgencyDashboardController::class, 'index'])->name('dashboard');
+    });
+    Route::middleware(['auth'])->prefix('branch')->name('branch.')->group(function () {
+        Route::get('/dashboard', [BranchDashboardController::class, 'index'])->name('dashboard');
+        Route::post('/customers', [BranchCustomerController::class, 'store'])->name('customers.store');
     });
 });
