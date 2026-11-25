@@ -7,6 +7,8 @@ use App\Http\Controllers\AgencyDashboardController;
 use App\Http\Controllers\BranchCustomerController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\RegionAgencyController;
+use App\Http\Controllers\RegionReportController;
 use Illuminate\Http\Request;
 
 Route::get('/', fn() => redirect()->route('login'));
@@ -22,6 +24,9 @@ Route::middleware(['auth', 'active'])->group(function () {
 
     Route::middleware('role:region')->prefix('region')->name('region.')->group(function () {
         Route::get('/dashboard', [RegionDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/agencies', [RegionAgencyController::class, 'index'])->name('agencies.index');
+        Route::get('/reports', [RegionReportController::class, 'index'])->name('reports.index');
+        Route::get('/reports/export', [RegionReportController::class, 'exportCsv'])->name('reports.export');
     });
     Route::middleware(['auth', 'active', 'role:admin_branch'])
         ->prefix('branch')
@@ -37,6 +42,7 @@ Route::middleware(['auth', 'active'])->group(function () {
         });
     Route::middleware('role:agency')->prefix('agency')->name('agency.')->group(function () {
         Route::get('/dashboard', [AgencyDashboardController::class, 'index'])->name('dashboard');
+        
     });
     Route::middleware(['auth'])->prefix('branch')->name('branch.')->group(function () {
         Route::get('/dashboard', [BranchDashboardController::class, 'index'])->name('dashboard');
