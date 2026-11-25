@@ -1,5 +1,6 @@
-.<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="id">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,22 +11,23 @@
 
     @stack('styles')
 </head>
+
 <body>
     @php
-        $customerMenu = [
-            [
-                'label' => 'Data Pelanggan',
-                'route' => 'branch.customers.index',
-            ],
-            [
-                'label' => 'Tambah Pelanggan',
-                'route' => 'branch.customers.create',
-            ],
-            [
-                'label' => 'Import Excel',
-                'route' => 'branch.customers.import',
-            ],
-        ];
+    $customerMenu = [
+    [
+    'label' => 'Data Pelanggan',
+    'route' => 'branch.customers.index',
+    ],
+    [
+    'label' => 'Tambah Pelanggan',
+    'route' => 'branch.customers.create',
+    ],
+    [
+    'label' => 'Import Excel',
+    'route' => 'branch.customers.import',
+    ],
+    ];
     @endphp
 
     <div class="app-shell">
@@ -34,8 +36,8 @@
                 <span class="brand-mark" aria-hidden="true">Q</span>
 
                 <span>
-                    <span class="brand-name">QC Monitor</span>
-                    <span class="brand-caption">Sumbagsel Operations</span>
+                    <span class="brand-name">QC Monitoring</span>
+                    <span class="brand-caption">Quality Control System</span>
                 </span>
             </a>
 
@@ -46,7 +48,7 @@
                     href="{{ route('branch.dashboard') }}"
                     class="nav-link {{ request()->routeIs('branch.dashboard') ? 'active' : '' }}"
                     @if(request()->routeIs('branch.dashboard')) aria-current="page" @endif
-                >
+                    >
                     <span class="nav-dot" aria-hidden="true"></span>
                     Dashboard
                 </a>
@@ -54,21 +56,20 @@
                 <div class="nav-section">PELANGGAN</div>
 
                 @foreach($customerMenu as $item)
-                    @if(\Illuminate\Support\Facades\Route::has($item['route']))
-                        <a
-                            href="{{ route($item['route']) }}"
-                            class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}"
-                        >
-                            <span class="nav-dot" aria-hidden="true"></span>
-                            {{ $item['label'] }}
-                        </a>
-                    @else
-                        <span class="nav-link nav-disabled" aria-disabled="true">
-                            <span class="nav-dot" aria-hidden="true"></span>
-                            {{ $item['label'] }}
-                            <span class="soon-tag">Segera</span>
-                        </span>
-                    @endif
+                @if(\Illuminate\Support\Facades\Route::has($item['route']))
+                <a
+                    href="{{ route($item['route']) }}"
+                    class="nav-link {{ request()->routeIs($item['route']) ? 'active' : '' }}">
+                    <span class="nav-dot" aria-hidden="true"></span>
+                    {{ $item['label'] }}
+                </a>
+                @else
+                <span class="nav-link nav-disabled" aria-disabled="true">
+                    <span class="nav-dot" aria-hidden="true"></span>
+                    {{ $item['label'] }}
+                    <span class="soon-tag">Segera</span>
+                </span>
+                @endif
                 @endforeach
             </nav>
 
@@ -113,27 +114,27 @@
                 </nav>
 
                 @if(session('success'))
-                    <div class="notice notice-success" role="status">
-                        {{ session('success') }}
-                    </div>
+                <div class="notice notice-success" role="status">
+                    {{ session('success') }}
+                </div>
                 @endif
 
                 @if(session('error'))
-                    <div class="notice notice-error" role="alert">
-                        {{ session('error') }}
-                    </div>
+                <div class="notice notice-error" role="alert">
+                    {{ session('error') }}
+                </div>
                 @endif
 
                 @if($errors->any())
-                    <div class="notice notice-error" role="alert">
-                        <p>Periksa kembali data berikut:</p>
+                <div class="notice notice-error" role="alert">
+                    <p>Periksa kembali data berikut:</p>
 
-                        <ul>
-                            @foreach($errors->all() as $error)
-                                <li>{{ $error }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
+                    <ul>
+                        @foreach($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
                 @endif
 
                 @yield('content')
@@ -147,4 +148,5 @@
 
     @stack('scripts')
 </body>
+
 </html>
