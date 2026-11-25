@@ -5,6 +5,8 @@
 
 @section('content')
     @php
+        $hasData = ($qcProgress['total'] ?? 0) > 0;
+
         $quickActions = [
             [
                 'title' => 'Tambah Pelanggan',
@@ -49,14 +51,22 @@
         </div>
     </section>
 
-    <div class="notice notice-info" role="status">
-        <span class="notice-title">Workspace siap untuk integrasi</span>
-        <span>
-            Modul pelanggan, import, export, dan perhitungan monitoring
-            belum dihubungkan. Tanda — berarti data belum tersedia,
-            bukan jumlah pelanggan nol.
-        </span>
-    </div>
+    @if(session('success'))
+        <div class="notice notice-info" role="status">
+            <span class="notice-title">Berhasil</span>
+            <span>{{ session('success') }}</span>
+        </div>
+    @endif
+
+    @if(!$hasData)
+        <div class="notice notice-info" role="status">
+            <span class="notice-title">Belum ada data pelanggan</span>
+            <span>
+                Silakan tambahkan data pelanggan melalui menu Tambah Pelanggan
+                untuk mulai memantau statistik QC cabang Anda.
+            </span>
+        </div>
+    @endif
 
     <section aria-labelledby="summary-title">
         <div class="section-heading">
@@ -67,7 +77,9 @@
                 </p>
             </div>
 
-            <span class="badge badge-neutral">Menunggu integrasi data</span>
+            <span class="badge badge-neutral">
+                {{ $hasData ? 'Data terintegrasi' : 'Menunggu data pelanggan' }}
+            </span>
         </div>
 
         <div class="kpi-grid">
@@ -136,16 +148,52 @@
                         Ringkasan penyelesaian pemeriksaan pelanggan.
                     </p>
                 </div>
+
+                @if($hasData)
+                    <span class="badge badge-neutral">{{ $qcProgress['rate'] }}% Selesai</span>
+                @endif
             </div>
 
-            <div class="empty-state">
-                <div class="empty-symbol" aria-hidden="true">QC</div>
-                <h3>Monitoring belum dihubungkan</h3>
-                <p>
-                    Grafik dan persentase akan ditampilkan setelah
-                    data pelanggan serta hasil QC tersedia.
-                </p>
-            </div>
+            @if($hasData)
+                <div>
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem; font-size: 0.9rem;">
+                        <span>Tingkat Penyelesaian QC</span>
+                        <strong>{{ $qcProgress['complete'] }} / {{ $qcProgress['total'] }} Pelanggan</strong>
+                    </div>
+
+                    <div style="width: 100%; height: 10px; background: #e2e8f0; border-radius: 999px; overflow: hidden; margin-bottom: 1.25rem;">
+                        <div style="width: {{ $qcProgress['rate'] }}%; height: 100%; background: #16a34a;"></div>
+                    </div>
+
+                    <div class="table-responsive">
+                        <table>
+                            <tbody>
+                                <tr>
+                                    <td>QC Complete</td>
+                                    <td style="text-align: right;"><strong>{{ $qcProgress['complete'] }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Sedang Diproses (In Progress)</td>
+                                    <td style="text-align: right;"><strong>{{ $qcProgress['in_progress'] }}</strong></td>
+                                </tr>
+                                <tr>
+                                    <td>Belum QC</td>
+                                    <td style="text-align: right;"><strong>{{ $qcProgress['belum_qc'] }}</strong></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-symbol" aria-hidden="true">QC</div>
+                    <h3>Belum ada data pemeriksaan</h3>
+                    <p>
+                        Grafik dan persentase akan ditampilkan setelah
+                        data pelanggan serta hasil QC tersedia.
+                    </p>
+                </div>
+            @endif
         </section>
 
         <section class="panel" aria-labelledby="agency-title">
@@ -158,14 +206,44 @@
                 </div>
             </div>
 
-            <div class="empty-state">
-                <div class="empty-symbol" aria-hidden="true">AG</div>
-                <h3>Belum ada data untuk ditampilkan</h3>
-                <p>
-                    Ringkasan Agency akan mengikuti pemetaan
-                    dan data pelanggan Branch Anda.
-                </p>
-            </div>
+            @if($agencyStats->isNotEmpty())
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th scope="col">Nama Agency</th>
+                                <th scope="col">Pelanggan PS</th>
+                                <th scope="col">QC Complete</th>
+                                <th scope="col">Penyelesaian</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($agencyStats as $agency)
+                                @php
+                                    $agencyRate = $agency->total_pelanggan > 0
+                                        ? round(($agency->qc_complete / $agency->total_pelanggan) * 100, 1)
+                                        : 0;
+                                @endphp
+                                <tr>
+                                    <td><strong>{{ $agency->name }}</strong></td>
+                                    <td>{{ $agency->total_pelanggan }}</td>
+                                    <td>{{ $agency->qc_complete }}</td>
+                                    <td>{{ $agencyRate }}%</td>
+                                </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            @else
+                <div class="empty-state">
+                    <div class="empty-symbol" aria-hidden="true">AG</div>
+                    <h3>Belum ada data untuk ditampilkan</h3>
+                    <p>
+                        Ringkasan Agency akan mengikuti pemetaan
+                        dan data pelanggan Branch Anda.
+                    </p>
+                </div>
+            @endif
         </section>
     </div>
 
@@ -174,7 +252,7 @@
             <div>
                 <h2 id="customers-title">Pelanggan terbaru</h2>
                 <p class="muted small">
-                    Area integrasi daftar pelanggan yang baru ditambahkan.
+                    Daftar pelanggan yang baru ditambahkan pada cabang Anda.
                 </p>
             </div>
 
@@ -206,17 +284,64 @@
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td colspan="6">
-                            <div class="empty-state compact">
-                                <h3>Daftar pelanggan belum dihubungkan</h3>
-                                <p>
-                                    Data dari modul input dan import Excel
-                                    nantinya ditampilkan di bagian ini.
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
+                    @forelse($recentCustomers as $customer)
+                        @php
+                            $qcStatus = $customer->qcRecord?->qc_status;
+                            $callStatus = $customer->qcRecord?->final_call_status;
+
+                            if ($qcStatus === 'complete') {
+                                $statusLabel = 'QC Complete';
+                            } elseif ($callStatus && $callStatus !== 'belum_dihubungi') {
+                                $statusLabel = 'In Progress';
+                            } else {
+                                $statusLabel = 'Belum QC';
+                            }
+                        @endphp
+                        <tr>
+                            <td>
+                                <strong>{{ $customer->nama_pelanggan }}</strong><br>
+                                <span class="muted small">ID: {{ $customer->service_id }}</span>
+                            </td>
+                            <td>
+                                {{ $customer->tanggal_ps ? $customer->tanggal_ps->format('d M Y') : '—' }}
+                            </td>
+                            <td>
+                                {{ $customer->agency?->name ?? '—' }}
+                            </td>
+                            <td>
+                                @if($customer->nama_sf)
+                                    {{ $customer->nama_sf }}
+                                    <span class="muted small">({{ $customer->kode_sf }})</span>
+                                @else
+                                    {{ $customer->kode_sf ?? '—' }}
+                                @endif
+                            </td>
+                            <td>
+                                <span class="badge badge-neutral">{{ $statusLabel }}</span>
+                            </td>
+                            <td>
+                                @if(\Illuminate\Support\Facades\Route::has('branch.customers.show'))
+                                    <a href="{{ route('branch.customers.show', $customer) }}" class="btn btn-outline">
+                                        Detail
+                                    </a>
+                                @else
+                                    <span class="muted small">—</span>
+                                @endif
+                            </td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="6">
+                                <div class="empty-state compact">
+                                    <h3>Belum ada data pelanggan</h3>
+                                    <p>
+                                        Data dari modul input dan import Excel
+                                        nantinya ditampilkan di bagian ini.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>
@@ -231,7 +356,9 @@
                 </p>
             </div>
 
-            <span class="badge badge-neutral">Menunggu integrasi data</span>
+            <span class="badge badge-neutral">
+                {{ $salesPerformance->isNotEmpty() ? $salesPerformance->count() . ' Sales terdaftar' : 'Belum ada data Sales' }}
+            </span>
         </div>
 
         <div class="table-responsive">
@@ -251,17 +378,32 @@
                 </thead>
 
                 <tbody>
-                    <tr>
-                        <td colspan="5">
-                            <div class="empty-state compact">
-                                <h3>Performa Sales belum tersedia</h3>
-                                <p>
-                                    Perhitungan akan menggunakan pelanggan
-                                    dan hasil QC sebenarnya.
-                                </p>
-                            </div>
-                        </td>
-                    </tr>
+                    @forelse($salesPerformance as $sale)
+                        @php
+                            $salesRate = $sale->total_pelanggan > 0
+                                ? round(($sale->qc_complete / $sale->total_pelanggan) * 100, 1)
+                                : 0;
+                        @endphp
+                        <tr>
+                            <td><strong>{{ $sale->kode_sf }}</strong></td>
+                            <td>{{ $sale->nama_sf }}</td>
+                            <td>{{ $sale->total_pelanggan }}</td>
+                            <td>{{ $sale->qc_complete }}</td>
+                            <td>{{ $salesRate }}%</td>
+                        </tr>
+                    @empty
+                        <tr>
+                            <td colspan="5">
+                                <div class="empty-state compact">
+                                    <h3>Performa Sales belum tersedia</h3>
+                                    <p>
+                                        Perhitungan akan menggunakan pelanggan
+                                        dan hasil QC sebenarnya.
+                                    </p>
+                                </div>
+                            </td>
+                        </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

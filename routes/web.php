@@ -23,24 +23,14 @@ Route::middleware(['auth', 'active'])->group(function () {
     Route::middleware('role:region')->prefix('region')->name('region.')->group(function () {
         Route::get('/dashboard', [RegionDashboardController::class, 'index'])->name('dashboard');
     });
-    Route::middleware(['auth', 'active', 'role:admin_branch'])
-        ->prefix('branch')
-        ->name('branch.')
-        ->group(function () {
-            Route::get('/dashboard', [BranchDashboardController::class, 'index'])
-                ->name('dashboard');
-        });
+
+    Route::middleware('role:admin_branch')->prefix('branch')->name('branch.')->group(function () {
+        Route::get('/dashboard', [BranchDashboardController::class, 'index'])->name('dashboard');
+        Route::get('/customers/create', [BranchCustomerController::class, 'create'])->name('customers.create');
+        Route::post('/customers', [BranchCustomerController::class, 'store'])->name('customers.store');
+    });
+
     Route::middleware('role:agency')->prefix('agency')->name('agency.')->group(function () {
         Route::get('/dashboard', [AgencyDashboardController::class, 'index'])->name('dashboard');
-    });
-    Route::middleware(['auth'])->prefix('branch')->name('branch.')->group(function () {
-        Route::get('/dashboard', [BranchDashboardController::class, 'index'])
-            ->name('dashboard');
-
-        Route::get('/customers/create', [BranchCustomerController::class, 'create'])
-            ->name('customers.create');
-
-        Route::post('/customers', [BranchCustomerController::class, 'store'])
-            ->name('customers.store');
     });
 });
