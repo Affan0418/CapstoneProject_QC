@@ -585,12 +585,7 @@ $quickActions = [
                 <tr>
                     <td colspan="5">
                         <div class="empty-state compact">
-                            <h3>
-                                {{ $salesRows === null
-                                        ? 'Performa Sales belum tersedia'
-                                        : 'Belum ada data Sales untuk ditampilkan' }}
-                            </h3>
-
+                            <h3>Belum ada data Sales untuk ditampilkan</h3>
                             <p>
                                 Ringkasan akan ditampilkan setelah
                                 data pelanggan dengan informasi Sales tersedia.
