@@ -29,17 +29,18 @@ Route::middleware(['auth', 'active'])->group(function () {
         ->group(function () {
             Route::get('/dashboard', [BranchDashboardController::class, 'index'])
                 ->name('dashboard');
-
-            /*
-         * Route pelanggan, import, dan export ditambahkan di sini
-         * setelah controller fiturnya dibuat.
-         */
         });
     Route::middleware('role:agency')->prefix('agency')->name('agency.')->group(function () {
         Route::get('/dashboard', [AgencyDashboardController::class, 'index'])->name('dashboard');
     });
     Route::middleware(['auth'])->prefix('branch')->name('branch.')->group(function () {
-        Route::get('/dashboard', [BranchDashboardController::class, 'index'])->name('dashboard');
-        Route::post('/customers', [BranchCustomerController::class, 'store'])->name('customers.store');
+        Route::get('/dashboard', [BranchDashboardController::class, 'index'])
+            ->name('dashboard');
+
+        Route::get('/customers/create', [BranchCustomerController::class, 'create'])
+            ->name('customers.create');
+
+        Route::post('/customers', [BranchCustomerController::class, 'store'])
+            ->name('customers.store');
     });
 });

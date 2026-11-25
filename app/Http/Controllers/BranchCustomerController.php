@@ -8,6 +8,7 @@ use App\Models\Sale;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\DB;
+use App\Models\Agency;
 
 class BranchCustomerController extends Controller
 {
@@ -60,5 +61,15 @@ class BranchCustomerController extends Controller
         return redirect()
             ->route('branch.dashboard')
             ->with('success', 'Data pelanggan berhasil ditambahkan.');
+    }
+
+    public function create()
+    {
+        $agencies = Agency::query()
+            ->where('is_active', true)
+            ->orderBy('name')
+            ->get(['id', 'name']);
+
+        return view('customers.create', compact('agencies'));
     }
 }
