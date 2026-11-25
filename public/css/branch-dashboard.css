@@ -2454,12 +2454,6 @@ tbody tr:hover {
     }
 }
 
-/* =====================================================
-   KPI CARD — ganti lingkaran dekoratif
-   Menjadi seperempat lingkaran dari kiri atas
-   ===================================================== */
-
-/* Hapus lingkaran lama di pojok kanan bawah */
 .kpi-card::after {
     content: "";
     position: absolute;
@@ -2541,11 +2535,6 @@ tbody tr:hover {
     }
 }
 
-/* =====================================================
-   INTERAKSI HALUS — Branch Dashboard
-   ===================================================== */
-
-/* Transisi dasar yang konsisten */
 .kpi-card,
 .action-card,
 .panel,
@@ -2750,6 +2739,723 @@ a.nav-link:hover {
 @media (prefers-reduced-motion: reduce) {
     .nav-link,
     .nav-link.active::before {
+        transition: none;
+    }
+}
+
+.panel-heading h2.dashboard-section-title {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    margin: 0;
+    padding-left: 0;
+    border-left: 0;
+
+    color: #303448;
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.45;
+    letter-spacing: -0.2px;
+}
+
+/* Hilangkan ikon/aksen pseudo-element lama pada dua judul ini */
+.panel-heading h2.dashboard-section-title::before,
+.panel-heading h2.dashboard-section-title::after {
+    content: none;
+}
+
+/* Wadah ikon */
+.dashboard-section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 42px;
+
+    width: 42px;
+    height: 42px;
+
+    border: 1px solid;
+    border-radius: 13px;
+
+    transition:
+        background-color 0.35s ease,
+        border-color 0.35s ease,
+        box-shadow 0.35s ease;
+}
+
+.dashboard-section-icon svg {
+    display: block;
+    flex-shrink: 0;
+}
+
+/* Pengelolaan pelanggan — merah senada dashboard */
+.dashboard-section-icon--customers {
+    border-color: #ffd8e2;
+    background-color: #fff0f4;
+    color: #df1742;
+
+    box-shadow: 0 3px 8px rgb(223 23 66 / 5%);
+}
+
+/* Progres QC — hijau sebagai aksen pemeriksaan */
+.dashboard-section-icon--qc {
+    border-color: #d2efdf;
+    background-color: #edf9f2;
+    color: #159467;
+
+    box-shadow: 0 3px 8px rgb(21 148 103 / 5%);
+}
+
+/* Deskripsi sejajar dengan teks judul */
+.panel-heading .dashboard-section-title + p {
+    margin-top: 5px;
+    padding-left: 54px;
+    line-height: 1.7;
+}
+
+/* Interaksi lembut, tanpa menggeser ikon atau teks */
+@media (hover: hover) and (pointer: fine) {
+    .panel:hover .dashboard-section-icon--customers {
+        border-color: #ffc1d1;
+        background-color: #ffe3ec;
+        box-shadow: 0 4px 12px rgb(223 23 66 / 10%);
+    }
+
+    .panel:hover .dashboard-section-icon--qc {
+        border-color: #b5e5cd;
+        background-color: #dcf4e7;
+        box-shadow: 0 4px 12px rgb(21 148 103 / 10%);
+    }
+}
+
+@media (max-width: 680px) {
+    .panel-heading h2.dashboard-section-title {
+        gap: 10px;
+        font-size: 14px;
+    }
+
+    .dashboard-section-icon {
+        flex-basis: 36px;
+        width: 36px;
+        height: 36px;
+        border-radius: 11px;
+    }
+
+    .dashboard-section-icon svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .panel-heading .dashboard-section-title + p {
+        padding-left: 46px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .dashboard-section-icon {
+        transition: none;
+    }
+}
+
+/* =====================================================
+   FINISHING JUDUL PANEL — 5 IKON SERAGAM
+   ===================================================== */
+
+/* Header tetap rapi saat berdampingan dengan tombol/badge */
+.panel > .panel-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 14px 18px;
+
+    padding: 18px 22px;
+}
+
+/* Pembungkus judul dan deskripsi */
+.panel > .panel-heading > div:first-child {
+    flex: 1 1 230px;
+    min-width: 0;
+}
+
+/* Judul */
+.panel-heading h2.dashboard-section-title {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    margin: 0;
+    padding: 0;
+    border: 0;
+
+    color: #303448;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.5;
+    letter-spacing: -0.15px;
+}
+
+/* Nonaktifkan aksen judul lama */
+.panel-heading h2.dashboard-section-title::before,
+.panel-heading h2.dashboard-section-title::after {
+    content: none;
+}
+
+/* Wadah ikon: lebih kecil dan tidak mendominasi */
+.panel-heading .dashboard-section-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    flex: 0 0 34px;
+    width: 34px;
+    height: 34px;
+
+    border: 1px solid;
+    border-radius: 10px;
+    box-shadow: none;
+
+    transition:
+        background-color 0.3s ease,
+        border-color 0.3s ease;
+}
+
+/* Samakan ukuran semua SVG, termasuk dua ikon sebelumnya */
+.panel-heading .dashboard-section-icon svg {
+    display: block;
+    flex-shrink: 0;
+
+    width: 18px;
+    height: 18px;
+}
+
+/* Warna dasar tiap ikon */
+.panel-heading .dashboard-section-icon--customers {
+    color: #df1742;
+    background-color: #fff0f4;
+    border-color: #ffdae4;
+}
+
+.panel-heading .dashboard-section-icon--qc {
+    color: #16865e;
+    background-color: #edf9f2;
+    border-color: #d3efdf;
+}
+
+.panel-heading .dashboard-section-icon--agency {
+    color: #7753c5;
+    background-color: #f4efff;
+    border-color: #e7ddfb;
+}
+
+.panel-heading .dashboard-section-icon--recent {
+    color: #287bb5;
+    background-color: #eef7ff;
+    border-color: #d9eafa;
+}
+
+.panel-heading .dashboard-section-icon--sales {
+    color: #ad7313;
+    background-color: #fff7e8;
+    border-color: #f5e6c3;
+}
+
+/* Deskripsi sejajar dengan teks, bukan dengan ikon */
+.panel-heading .dashboard-section-title + p {
+    margin: 4px 0 0;
+    padding-left: 44px;
+
+    color: #8790a2;
+    font-size: 11px;
+    line-height: 1.75;
+}
+
+/* Tombol dan badge tidak ikut menyusut */
+.panel > .panel-heading > .btn,
+.panel > .panel-heading > .badge {
+    flex-shrink: 0;
+}
+
+/* Hover: hanya perubahan warna, tanpa gerakan */
+@media (hover: hover) and (pointer: fine) {
+    .panel:hover .dashboard-section-icon--customers {
+        background-color: #ffe5ed;
+        border-color: #ffc8d7;
+        box-shadow: none;
+    }
+
+    .panel:hover .dashboard-section-icon--qc {
+        background-color: #dff4e8;
+        border-color: #bee7cf;
+        box-shadow: none;
+    }
+
+    .panel:hover .dashboard-section-icon--agency {
+        background-color: #eae1fc;
+        border-color: #d8c9f4;
+    }
+
+    .panel:hover .dashboard-section-icon--recent {
+        background-color: #e0effc;
+        border-color: #c5def4;
+    }
+
+    .panel:hover .dashboard-section-icon--sales {
+        background-color: #ffefcd;
+        border-color: #efdbac;
+    }
+}
+
+/* Mobile */
+@media (max-width: 680px) {
+    .panel > .panel-heading {
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .panel-heading h2.dashboard-section-title {
+        gap: 9px;
+        font-size: 13px;
+    }
+
+    .panel-heading .dashboard-section-icon {
+        flex-basis: 32px;
+        width: 32px;
+        height: 32px;
+        border-radius: 9px;
+    }
+
+    .panel-heading .dashboard-section-icon svg {
+        width: 17px;
+        height: 17px;
+    }
+
+    .panel-heading .dashboard-section-title + p {
+        padding-left: 41px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .panel-heading .dashboard-section-icon {
+        transition: none;
+    }
+}
+
+/* =====================================================
+   QC DASHBOARD — FINISHING SETELAH INTEGRASI
+   ===================================================== */
+
+/* HEADER: lebih ringkas */
+.page-heading.dashboard-welcome {
+    min-height: auto;
+    padding: 25px 28px;
+}
+
+.dashboard-welcome .welcome-copy {
+    min-width: 0;
+}
+
+.dashboard-welcome h1 {
+    margin-top: 0;
+    font-size: clamp(23px, 2vw, 29px);
+    line-height: 1.35;
+}
+
+.dashboard-welcome .welcome-copy > p {
+    margin-bottom: 0;
+    line-height: 1.75;
+}
+
+/* Jarak antarbagian tanpa mengubah layout utama */
+.main-content > section,
+.main-content > .dashboard-columns,
+.main-content > .notice {
+    margin-bottom: 24px;
+}
+
+/* KARTU AKSI */
+.action-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 15px;
+    padding: 22px;
+}
+
+.action-card.qc-action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    min-width: 0;
+
+    padding: 20px;
+    border: 1px solid #e9ecf3;
+    border-radius: 15px;
+
+    background: #fff;
+    box-shadow: none;
+
+    transition:
+        border-color 0.3s ease,
+        box-shadow 0.3s ease;
+}
+
+/* Aksi utama diberi penekanan */
+.action-card.qc-action-card:first-child {
+    border-color: #f5ceda;
+    background: linear-gradient(145deg, #fff, #fff2f6);
+}
+
+.qc-action-icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+
+    width: 41px;
+    height: 41px;
+    margin-bottom: 17px;
+    border: 1px solid #d8ece2;
+    border-radius: 12px;
+
+    background: #eff8f3;
+    color: #21835c;
+}
+
+.qc-action-icon--primary {
+    border-color: #ffd4df;
+    background: #ffe7ee;
+    color: #dc1640;
+}
+
+.qc-action-card:last-child .qc-action-icon {
+    border-color: #e1e6f0;
+    background: #f1f4fa;
+    color: #63728e;
+}
+
+.qc-action-card h3 {
+    margin: 0 0 8px;
+    color: #30364a;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.qc-action-card p {
+    margin: 0 0 20px;
+    color: #7c869b;
+    font-size: 11px;
+    line-height: 1.8;
+}
+
+.qc-action-card .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    width: 100%;
+    min-height: 38px;
+    margin-top: auto;
+    padding: 9px 11px;
+
+    font-size: 11px;
+    line-height: 1.5;
+    text-decoration: none;
+    box-sizing: border-box;
+}
+
+.qc-action-arrow {
+    flex-shrink: 0;
+    font-size: 17px;
+    line-height: 1;
+}
+
+/* PANELS: pasif, tidak ikut terangkat */
+.panel:hover {
+    transform: none;
+    border-color: #e9ebf2;
+    box-shadow: 0 4px 16px rgb(35 40 70 / 3%);
+}
+
+.dashboard-columns {
+    align-items: stretch;
+    gap: 22px;
+}
+
+.dashboard-columns > .panel {
+    min-width: 0;
+}
+
+/* RINGKASAN PROGRES */
+.qc-progress-summary {
+    margin: 22px;
+    padding: 20px;
+    border: 1px solid #dceee3;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f3fbf6, #fff);
+}
+
+.qc-progress-summary__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 17px;
+}
+
+.qc-progress-summary__label {
+    color: #3b5b4a;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+.qc-progress-summary__top p {
+    margin: 6px 0 0;
+    color: #7c9285;
+    font-size: 11px;
+    line-height: 1.6;
+}
+
+.qc-progress-summary__value {
+    flex-shrink: 0;
+    color: #168353;
+    font-size: 32px;
+    font-weight: 750;
+    letter-spacing: -1px;
+    line-height: 1;
+}
+
+.qc-progress-summary__value span {
+    margin-left: 2px;
+    font-size: 17px;
+}
+
+/* Progress bar native */
+.qc-progress-meter {
+    display: block;
+    appearance: none;
+    -webkit-appearance: none;
+
+    width: 100%;
+    height: 9px;
+    overflow: hidden;
+
+    border: 0;
+    border-radius: 999px;
+    background: #e3eee7;
+    accent-color: #20a367;
+}
+
+.qc-progress-meter::-webkit-progress-bar {
+    border-radius: 999px;
+    background: #e3eee7;
+}
+
+.qc-progress-meter::-webkit-progress-value {
+    border-radius: 999px;
+    background: linear-gradient(90deg, #168c58, #36bf7c);
+}
+
+.qc-progress-meter::-moz-progress-bar {
+    border-radius: 999px;
+    background: linear-gradient(90deg, #168c58, #36bf7c);
+}
+
+/* TABEL: dibatasi hanya di panel dashboard */
+.panel .table-responsive {
+    max-width: 100%;
+    overflow-x: auto;
+}
+
+.panel table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.panel table thead th {
+    padding: 13px 18px;
+    border-bottom: 1px solid #e9edf4;
+
+    background: #f7f9fc;
+    color: #748098;
+    font-size: 10px;
+    font-weight: 650;
+    line-height: 1.6;
+    letter-spacing: 0.3px;
+    text-align: left;
+    white-space: nowrap;
+}
+
+.panel table tbody td,
+.panel table tbody th {
+    padding: 15px 18px;
+    border-bottom: 1px solid #eef1f6;
+
+    color: #68758b;
+    font-size: 12px;
+    line-height: 1.75;
+    vertical-align: middle;
+}
+
+.panel table tbody th {
+    background: transparent;
+    font-weight: 500;
+    text-align: left;
+}
+
+.panel table tbody td strong {
+    color: #344056;
+    font-weight: 600;
+}
+
+.panel table tbody tr:last-child td,
+.panel table tbody tr:last-child th {
+    border-bottom: 0;
+}
+
+.panel table tbody tr {
+    transition: background-color 0.25s ease;
+}
+
+/* Angka Agency dan Sales rata kanan */
+[aria-labelledby="agency-title"] table th:not(:first-child),
+[aria-labelledby="agency-title"] table td:not(:first-child),
+[aria-labelledby="sales-title"] table th:nth-child(n + 3),
+[aria-labelledby="sales-title"] table td:nth-child(n + 3) {
+    text-align: right;
+    font-variant-numeric: tabular-nums;
+}
+
+/* Tombol detail lebih ringkas */
+[aria-labelledby="customers-title"] tbody .btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    min-height: 30px;
+    padding: 5px 10px;
+    border-radius: 8px;
+
+    font-size: 10px;
+    text-decoration: none;
+}
+
+/* BADGE STATUS */
+.badge.qc-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    padding: 5px 9px;
+    border: 1px solid;
+    border-radius: 7px;
+
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.5;
+    white-space: nowrap;
+}
+
+.qc-status__dot {
+    flex: 0 0 5px;
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.badge.qc-status--complete {
+    border-color: #cfead9;
+    background: #edf9f1;
+    color: #20794b;
+}
+
+.badge.qc-status--progress {
+    border-color: #f1dfb1;
+    background: #fff7e5;
+    color: #936612;
+}
+
+.badge.qc-status--pending {
+    border-color: #e1e6ef;
+    background: #f2f5f9;
+    color: #6d7b91;
+}
+
+/* HOVER: hanya perangkat dengan kursor */
+@media (hover: hover) and (pointer: fine) {
+    .action-card.qc-action-card:hover {
+        transform: none;
+        border-color: #efbbcc;
+        box-shadow: 0 6px 18px rgb(68 43 65 / 6%);
+    }
+
+    .panel table tbody tr:hover {
+        background-color: #fff9fb;
+    }
+}
+
+/* Sidebar tetap tidak bergeser */
+.sidebar .nav-link:hover,
+.sidebar .nav-link.active:hover {
+    transform: none;
+}
+
+/* TABLET */
+@media (max-width: 1200px) {
+    .action-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+/* MOBILE */
+@media (max-width: 680px) {
+    .page-heading.dashboard-welcome {
+        padding: 21px;
+    }
+
+    .main-content > section,
+    .main-content > .dashboard-columns,
+    .main-content > .notice {
+        margin-bottom: 18px;
+    }
+
+    .action-grid {
+        gap: 12px;
+        padding: 16px;
+    }
+
+    .action-card.qc-action-card {
+        padding: 16px;
+    }
+
+    .qc-progress-summary {
+        margin: 16px;
+        padding: 17px;
+    }
+
+    .qc-progress-summary__value {
+        font-size: 28px;
+    }
+
+    .panel table thead th,
+    .panel table tbody td,
+    .panel table tbody th {
+        padding: 12px 14px;
+    }
+}
+
+@media (max-width: 440px) {
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .action-card.qc-action-card,
+    .panel table tbody tr {
         transition: none;
     }
 }

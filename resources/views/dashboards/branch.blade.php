@@ -13,24 +13,28 @@ $quickActions = [
 'description' => 'Input pelanggan baru secara manual.',
 'route' => 'branch.customers.create',
 'primary' => true,
+'icon' => 'customer',
 ],
 [
 'title' => 'Import Excel',
 'description' => 'Unggah data pelanggan dari file Excel.',
 'route' => 'branch.customers.import',
 'primary' => false,
+'icon' => 'import',
 ],
 [
 'title' => 'Export Excel',
 'description' => 'Unduh data sesuai kewenangan cabang.',
 'route' => 'branch.customers.export',
 'primary' => false,
+'icon' => 'export',
 ],
 [
 'title' => 'Data Pelanggan',
 'description' => 'Cari dan kelola pelanggan cabang Anda.',
 'route' => 'branch.customers.index',
 'primary' => false,
+'icon' => 'table',
 ],
 ];
 @endphp
@@ -49,7 +53,7 @@ $quickActions = [
 
     <div class="branch-chip">
         <span class="status-dot" aria-hidden="true"></span>
-        {{ $branchName }}
+        {{ $branchName ?? 'Cabang belum tersedia' }}
     </div>
 </section>
 
@@ -76,14 +80,15 @@ $quickActions = [
     <div class="section-heading">
         <div>
             <h2 id="summary-title">Ringkasan cabang</h2>
+
             <p class="muted small">
-                Area ringkasan monitoring pelanggan dan pemeriksaan QC.
+                Ringkasan monitoring pelanggan dan pemeriksaan QC.
             </p>
         </div>
     </div>
 
     <div class="kpi-grid">
-        @foreach($metrics as $metric)
+        @foreach(($metrics ?? []) as $metric)
         <article class="kpi-card">
             <div class="kpi-label">
                 <span
@@ -113,7 +118,30 @@ $quickActions = [
 <section class="panel" aria-labelledby="actions-title">
     <div class="panel-heading">
         <div>
-            <h2 id="actions-title">Pengelolaan pelanggan</h2>
+            <h2 id="actions-title" class="dashboard-section-title">
+                <span
+                    class="dashboard-section-icon dashboard-section-icon--customers"
+                    aria-hidden="true">
+                    <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        focusable="false">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg>
+                </span>
+
+                <span>Pengelolaan pelanggan</span>
+            </h2>
+
             <p class="muted small">
                 Akses utama untuk pekerjaan administrasi cabang.
             </p>
@@ -122,7 +150,44 @@ $quickActions = [
 
     <div class="action-grid">
         @foreach($quickActions as $action)
-        <article class="action-card">
+        <article class="action-card qc-action-card">
+            <span
+                class="qc-action-icon {{ $action['primary'] ? 'qc-action-icon--primary' : '' }}"
+                aria-hidden="true">
+                <svg
+                    width="21"
+                    height="21"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="1.7"
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    focusable="false">
+                    @switch($action['icon'])
+                    @case('customer')
+                    <circle cx="9" cy="7" r="4" />
+                    <path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 5 2.7" />
+                    <path d="M19 14v8M15 18h8" />
+                    @break
+
+                    @case('import')
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6M12 11v7m-3-3 3 3 3-3" />
+                    @break
+
+                    @case('export')
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z" />
+                    <path d="M14 2v6h6M12 18v-7m-3 3 3-3 3 3" />
+                    @break
+
+                    @default
+                    <rect x="3" y="3" width="18" height="18" rx="3" />
+                    <path d="M3 9h18M9 9v12M3 15h18" />
+                    @endswitch
+                </svg>
+            </span>
+
             <h3>{{ $action['title'] }}</h3>
             <p class="muted small">
                 {{ $action['description'] }}
@@ -132,7 +197,8 @@ $quickActions = [
             <a
                 href="{{ route($action['route']) }}"
                 class="btn {{ $action['primary'] ? 'btn-primary' : 'btn-outline' }}">
-                Buka {{ $action['title'] }}
+                <span>Buka {{ $action['title'] }}</span>
+                <span class="qc-action-arrow" aria-hidden="true">→</span>
             </a>
             @else
             <button
@@ -152,7 +218,29 @@ $quickActions = [
     <section class="panel" aria-labelledby="progress-title">
         <div class="panel-heading">
             <div>
-                <h2 id="progress-title">Progres pemeriksaan QC</h2>
+                <h2 id="progress-title" class="dashboard-section-title">
+                    <span
+                        class="dashboard-section-icon dashboard-section-icon--qc"
+                        aria-hidden="true">
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            focusable="false">
+                            <rect x="8" y="2" width="8" height="4" rx="1.5" />
+                            <path d="M8 4H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2h-2" />
+                            <path d="m8 14 3 3 5-6" />
+                        </svg>
+                    </span>
+
+                    <span>Progres pemeriksaan QC</span>
+                </h2>
+
                 <p class="muted small">
                     Ringkasan penyelesaian pemeriksaan pelanggan.
                 </p>
@@ -212,7 +300,30 @@ $quickActions = [
     <section class="panel" aria-labelledby="agency-title">
         <div class="panel-heading">
             <div>
-                <h2 id="agency-title">Monitoring Agency</h2>
+                <h2 id="agency-title" class="dashboard-section-title">
+                    <span
+                        class="dashboard-section-icon dashboard-section-icon--agency"
+                        aria-hidden="true">
+                        <svg
+                            width="18"
+                            height="18"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            stroke-width="1.7"
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            focusable="false">
+                            <rect x="9" y="3" width="6" height="5" rx="1.2" />
+                            <path d="M12 8v5M5 16v-3h14v3" />
+                            <rect x="2" y="16" width="6" height="5" rx="1.2" />
+                            <rect x="16" y="16" width="6" height="5" rx="1.2" />
+                        </svg>
+                    </span>
+
+                    <span>Monitoring Agency</span>
+                </h2>
+
                 <p class="muted small">
                     Performa Agency yang menangani pelanggan cabang.
                 </p>
@@ -255,10 +366,9 @@ $quickActions = [
         @else
         <div class="empty-state">
             <div class="empty-symbol" aria-hidden="true">AG</div>
-            <h3>Belum ada data untuk ditampilkan</h3>
+            <h3>Monitoring Agency belum tersedia</h3>
             <p>
-                Ringkasan Agency akan mengikuti pemetaan
-                dan data pelanggan Branch Anda.
+                Panel ini menunggu data ringkasan Agency dari backend.
             </p>
         </div>
         @endif
@@ -269,7 +379,29 @@ $quickActions = [
 <section class="panel" aria-labelledby="customers-title">
     <div class="panel-heading">
         <div>
-            <h2 id="customers-title">Pelanggan terbaru</h2>
+            <h2 id="customers-title" class="dashboard-section-title">
+                <span
+                    class="dashboard-section-icon dashboard-section-icon--recent"
+                    aria-hidden="true">
+                    <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        focusable="false">
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M2 21v-2a6 6 0 0 1 6-6h2a6 6 0 0 1 5 2.7" />
+                        <path d="M19 14v8M15 18h8" />
+                    </svg>
+                </span>
+
+                <span>Pelanggan terbaru</span>
+            </h2>
+
             <p class="muted small">
                 Daftar pelanggan yang baru ditambahkan pada cabang Anda.
             </p>
@@ -381,7 +513,28 @@ $quickActions = [
 <section class="panel" aria-labelledby="sales-title">
     <div class="panel-heading">
         <div>
-            <h2 id="sales-title">Performa Sales</h2>
+            <h2 id="sales-title" class="dashboard-section-title">
+                <span
+                    class="dashboard-section-icon dashboard-section-icon--sales"
+                    aria-hidden="true">
+                    <svg
+                        width="18"
+                        height="18"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="1.7"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        focusable="false">
+                        <path d="M3 3v18h18" />
+                        <path d="M8 17v-5M13 17V8M18 17V5" />
+                    </svg>
+                </span>
+
+                <span>Performa Sales</span>
+            </h2>
+
             <p class="muted small">
                 Perbandingan progres QC berdasarkan Sales dalam cabang.
             </p>
@@ -432,7 +585,12 @@ $quickActions = [
                 <tr>
                     <td colspan="5">
                         <div class="empty-state compact">
-                            <h3>Performa Sales belum tersedia</h3>
+                            <h3>
+                                {{ $salesRows === null
+                                        ? 'Performa Sales belum tersedia'
+                                        : 'Belum ada data Sales untuk ditampilkan' }}
+                            </h3>
+
                             <p>
                                 Ringkasan akan ditampilkan setelah
                                 data pelanggan dengan informasi Sales tersedia.
